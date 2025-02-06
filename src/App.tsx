@@ -1,33 +1,37 @@
 import { BrowserRouter, Route, Routes, Link } from 'react-router';
 import { ThemeProvider } from 'styled-components';
 import { Button } from './components/atoms/Button';
-import { theme } from './theme';
+import { theme } from './theme/theme';
+import GlobalStyle from './theme/globalStyle';
 
 function App() {
   return (
-    <BrowserRouter>
-      <ThemeProvider theme={theme}>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <>
-                <Link to="/test">First link</Link>
-              </>
-            }
-          />
-          <Route
-            path="/test"
-            element={
-              <>
-                Hello world test
-                <Button>First btn</Button>
-              </>
-            }
-          />
-        </Routes>
-      </ThemeProvider>
-    </BrowserRouter>
+    <>
+      <GlobalStyle />
+      <BrowserRouter>
+        <ThemeProvider theme={theme}>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <>
+                  <Link to="/test">First link</Link>
+                </>
+              }
+            />
+            <Route
+              path="/test"
+              element={
+                <>
+                  Hello world test
+                  <Button>First btn</Button>
+                </>
+              }
+            />
+          </Routes>
+        </ThemeProvider>
+      </BrowserRouter>
+    </>
   );
 }
 
