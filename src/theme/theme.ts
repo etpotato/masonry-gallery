@@ -1,6 +1,7 @@
 export const theme = {
   colors: {
     background: '#fff',
+    neutral: '#f0f0f0',
   },
   padding: {
     xs: 4,
