@@ -27,10 +27,10 @@ export const StyledSkeleton = styled.div<{ bgColor?: string | null }>`
     background-image: linear-gradient(
       0deg,
       rgba(255, 255, 255, 0) 35%,
-      rgba(255, 255, 255, 0.4) 50%,
+      rgba(255, 255, 255, 0.2) 50%,
       rgba(255, 255, 255, 0) 65%
     );
-    animation: shimmer 5s infinite;
+    animation: shimmer 2s infinite;
   }
 
   @keyframes shimmer {

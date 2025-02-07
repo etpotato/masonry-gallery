@@ -19,6 +19,11 @@ export const theme = {
     md: 900,
   },
   contanierWidth: 1200,
+  gridColumn: {
+    sm: 2,
+    md: 3,
+    lg: 4,
+  },
 } as const;
 
 export type Theme = typeof theme;
