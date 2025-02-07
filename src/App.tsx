@@ -7,6 +7,7 @@ import { Button } from './components/atoms/Button';
 import { theme } from './theme/theme';
 import GlobalStyle from './theme/globalStyle';
 import { queryPhotos } from './queries/photos';
+import { Layout } from './components/templates/Layout';
 
 function App() {
   const [photos, setPhotos] = useState<Photo[]>([]);
@@ -25,26 +26,28 @@ function App() {
       <BrowserRouter>
         <ThemeProvider theme={theme}>
           <Routes>
-            <Route
-              path="/"
-              element={
-                <>
-                  <Link to="/test">First link</Link>
-                  {photos.map((photo) => (
-                    <img src={photo.src.large} />
-                  ))}
-                </>
-              }
-            />
-            <Route
-              path="/test"
-              element={
-                <>
-                  Hello world test
-                  <Button>First btn</Button>
-                </>
-              }
-            />
+            <Route path="/" element={<Layout />}>
+              <Route
+                index
+                element={
+                  <>
+                    <Link to="/test">First link</Link>
+                    {photos.map((photo) => (
+                      <img src={photo.src.large} key={photo.id} />
+                    ))}
+                  </>
+                }
+              />
+              <Route
+                path="/test"
+                element={
+                  <>
+                    Hello world test
+                    <Button>First btn</Button>
+                  </>
+                }
+              />
+            </Route>
           </Routes>
         </ThemeProvider>
       </BrowserRouter>
