@@ -1,27 +1,53 @@
-import { useEffect, useState } from 'react';
-import { queryPhotos } from '../../../queries/photos/pexels';
+import { fetchPhotos } from '../../../queries/photos/pexels';
 import { Masonry } from '../../molecules/Masonry';
 import { useTheme } from 'styled-components';
-import { ImageData } from '../../../types/image';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { Loader } from '../../atoms/Loader';
+import { LoaderWrapper, ScrollContent, ScrollWrap } from './styles';
+import { removeImageDuplicates } from '../../../utils/remove-image-duplicates';
+import { useState } from 'react';
 
 export const Gallery = () => {
-  const [photos, setPhotos] = useState<ImageData[]>([]);
   const theme = useTheme();
+  const [translateY, setTranslateY] = useState(0);
 
-  useEffect(() => {
-    (async function getPhotos() {
-      setPhotos([]);
-      const data = await queryPhotos({ query: 'dog', per_page: 20 });
-      console.log('data', data);
-      setPhotos(data.photos);
-    })();
-  }, []);
+  const photosQuery = useInfiniteQuery({
+    queryKey: ['photos'],
+    queryFn: ({ pageParam }) => fetchPhotos({ page: pageParam, per_page: 80 }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      if (!lastPage.photos.length) {
+        return undefined;
+      }
+      return lastPage.page + 1;
+    },
+    select: (data) => ({
+      ...data,
+      photos: removeImageDuplicates(data.pages.flatMap((page) => page.photos)),
+    }),
+  });
+
+  const isLoading = photosQuery.isLoading || photosQuery.isFetchingNextPage;
+
+  const handleScroll = (e: any) => {
+    setTranslateY(-1 * e.target.scrollTop);
+  };
 
   return (
-    <Masonry
-      photos={photos}
-      columns={theme.gridColumn}
-      gap={{ sm: theme.padding.sm, md: theme.padding.md, lg: theme.padding.md }}
-    />
+    <ScrollWrap onScroll={handleScroll}>
+      <ScrollContent>
+        <Masonry
+          style={{ transform: `translateY(${translateY}px)` }}
+          photos={photosQuery.data?.photos || []}
+          columns={theme.gridColumn}
+          gap={{ sm: theme.padding.sm, md: theme.padding.md, lg: theme.padding.md }}
+        />
+        {isLoading ? (
+          <LoaderWrapper>
+            <Loader />
+          </LoaderWrapper>
+        ) : null}
+      </ScrollContent>
+    </ScrollWrap>
   );
 };

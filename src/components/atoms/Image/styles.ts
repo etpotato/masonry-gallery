@@ -10,10 +10,10 @@ export const StyledImage = styled.img`
   height: auto;
 `;
 
-export const StyledSkeleton = styled.div<{ bgColor?: string | null }>`
+export const StyledSkeleton = styled.div<{ $bgColor?: string | null }>`
   grid-area: 1 / 1 / 2 / 2;
   position: relative;
-  background-color: ${(props) => props.bgColor || props.theme.colors.neutral};
+  background-color: ${(props) => props.$bgColor || props.theme.colors.neutral};
   overflow: hidden;
 
   &::before {

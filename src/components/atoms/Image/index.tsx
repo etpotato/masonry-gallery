@@ -12,7 +12,7 @@ export const Image: FC<ImageProps> = ({ image }) => {
   return (
     <StyledWrapper>
       <StyledImage src={image.src.lg} alt={image.title} onLoad={() => setLoading(false)} />
-      {loading ? <StyledSkeleton bgColor={image.background} /> : null}
+      {loading ? <StyledSkeleton $bgColor={image.background} /> : null}
     </StyledWrapper>
   );
 };

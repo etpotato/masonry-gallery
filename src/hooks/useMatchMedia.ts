@@ -23,7 +23,7 @@ export default function useMatchMedia(callback: (size: MediaSize) => void) {
       const listener = () => {
         if (mediaQuery.matches) {
           callback(size as MediaSize);
-          console.log('matches', size);
+          // console.log('matches', size);
         }
       };
 
