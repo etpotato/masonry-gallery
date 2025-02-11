@@ -19,7 +19,7 @@ async function fetchPexelsPhotos(url: string) {
   return response;
 }
 
-function pexelsAdapdater(data: PexelsPhotos): Photos {
+export function pexelsAdapdater(data: PexelsPhotos): Photos {
   return {
     photos: data.photos.map((photo) => ({
       id: String(photo.id),

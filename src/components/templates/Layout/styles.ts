@@ -8,5 +8,4 @@ export const StyledLayout = styled.div`
 
 export const StyledMain = styled.main`
   flex: 1;
-  padding: ${(props) => props.theme.padding.md}px 0;
 `;

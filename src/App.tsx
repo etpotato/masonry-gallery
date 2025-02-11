@@ -5,8 +5,8 @@ import { Button } from './components/atoms/Button';
 import { theme } from './theme/theme';
 import GlobalStyle from './theme/global-style';
 import { Layout } from './components/templates/Layout';
-import { Gallery } from './components/organisms/Gallery';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { PinterestGallery } from './components/organisms/PinterestGallery';
 
 const queryClient = new QueryClient();
 
@@ -19,7 +19,7 @@ function App() {
           <ThemeProvider theme={theme}>
             <Routes>
               <Route path="/" element={<Layout />}>
-                <Route index element={<Gallery />} />
+                <Route index element={<PinterestGallery />} />
                 <Route
                   path="/test"
                   element={

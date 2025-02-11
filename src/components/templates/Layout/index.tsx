@@ -9,9 +9,9 @@ export const Layout = () => {
     <StyledLayout>
       <Header>Header</Header>
       <StyledMain>
-        <Container>
-          <Outlet />
-        </Container>
+        {/* <Container> */}
+        <Outlet />
+        {/* </Container> */}
       </StyledMain>
     </StyledLayout>
   );
