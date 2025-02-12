@@ -29,12 +29,12 @@ export class CachesSafe {
   }
 }
 
-export async function withCachesSafe<T>(
+export function withCachesSafe<T>(
   cachesName: string,
   fetchData: (url: string, ...args: unknown[]) => Promise<Response>,
 ) {
   const cachesSafe = new CachesSafe(cachesName);
-  await cachesSafe.init();
+  cachesSafe.init();
 
   return async function (url: string, ...args: unknown[]) {
     if (ENABLE_CACHE) {

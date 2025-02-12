@@ -46,13 +46,13 @@ export function pexelsAdapdater(data: PexelsPhotos): Photos {
   };
 }
 
-const listingWithCaches = await withCachesSafe<PexelsPhotos>('pexels-photos', fetchPexelsPhotos);
+const listingWithCaches = withCachesSafe<PexelsPhotos>('pexels-photos', fetchPexelsPhotos);
 export const fetchPhotos: QueryPhotos = async (input) => {
   const result = await listingWithCaches(getPexelsListingUrl(input));
   return pexelsAdapdater(result);
 };
 
-const detailedWithCaches = await withCachesSafe<PexelsPhoto>('pexels-photo', fetchPexelsPhotos);
+const detailedWithCaches = withCachesSafe<PexelsPhoto>('pexels-photo', fetchPexelsPhotos);
 export const fetchPhoto: QueryPhoto = async (input) => {
   const result = await detailedWithCaches(getPexelsDetailedUrl(input));
   return mapPexelsPhoto(result);
