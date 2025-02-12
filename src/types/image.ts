@@ -13,5 +13,6 @@ export type ImageData = ImageIntrinsicSize & {
   title: string;
   author: string;
   authorUrl: string;
+  url: string;
   background?: string;
 };

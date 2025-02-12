@@ -70,7 +70,7 @@ export const Masonry: FC<MasonryProps> = ({ containerWidth, margin, masonry, onB
               height: `${height}px`,
             }}
           >
-            <StyledLink to={``}>
+            <StyledLink to={`/image/${image.id}`}>
               <Image image={image} />
             </StyledLink>
           </Item>

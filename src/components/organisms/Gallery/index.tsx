@@ -7,20 +7,22 @@ import { getMasonry } from '../../../utils/get-masonry';
 import { Loader } from '../../atoms/Loader';
 import { Masonry } from '../../molecules/Masonry';
 import { LoaderWrapper } from './styles';
+import { Outlet } from 'react-router';
 
 export type GalleryProps = {
   width: number;
   columns: number;
+  visibilityMargin: number;
 };
 
-export const Gallery: FC<GalleryProps> = ({ width, columns }) => {
+export const Gallery: FC<GalleryProps> = ({ width, columns, visibilityMargin }) => {
   const theme = useTheme();
   const columnHeights = useRef(new Array(columns).fill(0));
 
   const photosQuery = useInfiniteQuery({
     queryKey: PhotoQueryKey.all,
     queryFn: async ({ pageParam }) => {
-      const data = await fetchPhotos({ page: pageParam, per_page: 25 });
+      const data = await fetchPhotos({ page: pageParam, per_page: 20 });
 
       const masonry = getMasonry({
         xGap: theme.padding.md,
@@ -58,7 +60,7 @@ export const Gallery: FC<GalleryProps> = ({ width, columns }) => {
       {photosQuery.data?.masonry ? (
         <Masonry
           containerWidth={width}
-          margin={300}
+          margin={visibilityMargin}
           masonry={photosQuery.data.masonry}
           onBottomVisible={() => !photosQuery.isFetching && photosQuery.fetchNextPage()}
         />
@@ -68,6 +70,7 @@ export const Gallery: FC<GalleryProps> = ({ width, columns }) => {
           <Loader />
         </LoaderWrapper>
       ) : null}
+      <Outlet />
     </>
   );
 };

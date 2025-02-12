@@ -12,3 +12,7 @@ export type Photos = {
 } & Pagination;
 
 export type QueryPhotos = (input: FetchPhotosInput) => Promise<Photos>;
+
+export type FetchPhotoInput = { id: string };
+
+export type QueryPhoto = (input: FetchPhotoInput) => Promise<ImageData>;
