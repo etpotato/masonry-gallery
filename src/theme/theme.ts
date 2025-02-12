@@ -18,12 +18,14 @@ export const theme = {
   breakpoints: {
     sm: 600,
     md: 900,
+    lg: 1200,
   },
-  contanierWidth: 1200,
+  contanierWidth: 1400,
   gridColumn: {
     sm: 2,
     md: 3,
     lg: 4,
+    xl: 5,
   },
 } as const;
 

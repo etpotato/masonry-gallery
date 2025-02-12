@@ -1,40 +1,32 @@
 import { useTheme } from 'styled-components';
 import { fetchPhotos } from '../../../queries/photos/pexels';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { FC, useRef } from 'react';
+import { FC, useMemo, useRef } from 'react';
 import { PhotoQueryKey } from '../../../queries/photos';
 import { getMasonry } from '../../../utils/get-masonry';
 import { Loader } from '../../atoms/Loader';
 import { Masonry } from '../../molecules/Masonry';
 import { LoaderWrapper } from './styles';
 import { Outlet } from 'react-router';
+import useMatchMedia from '../../../hooks/use-match-media';
+import { useResizeObserver } from '../../../hooks/use-resize-observer';
 
 export type GalleryProps = {
-  width: number;
-  columns: number;
   visibilityMargin: number;
 };
 
-export const Gallery: FC<GalleryProps> = ({ width, columns, visibilityMargin }) => {
+export const Gallery: FC<GalleryProps> = ({ visibilityMargin }) => {
   const theme = useTheme();
-  const columnHeights = useRef(new Array(columns).fill(0));
+  const mediaSize = useMatchMedia();
+  const contaierRef = useRef<HTMLDivElement>(null);
+  const width = useResizeObserver(contaierRef);
 
   const photosQuery = useInfiniteQuery({
     queryKey: PhotoQueryKey.all,
     queryFn: async ({ pageParam }) => {
       const data = await fetchPhotos({ page: pageParam, per_page: 20 });
 
-      const masonry = getMasonry({
-        xGap: theme.padding.md,
-        yGap: theme.padding.md,
-        columnHeights: columnHeights.current,
-        containerWidth: width,
-        images: data.photos || [],
-      });
-
-      columnHeights.current = masonry.columnHeights;
-
-      return { ...data, masonry };
+      return { ...data };
     },
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
@@ -44,24 +36,31 @@ export const Gallery: FC<GalleryProps> = ({ width, columns, visibilityMargin }) 
       return lastPage.page + 1;
     },
     select: (data) => {
-      const masonry = {
-        ...data.pages[data.pages.length - 1].masonry,
-        grid: data.pages.flatMap((page) => page.masonry.grid),
-      };
       return {
         ...data,
-        masonry,
+        photos: data.pages.flatMap((page) => page.photos),
       };
     },
   });
 
+  const masonry = useMemo(() => {
+    const result = getMasonry({
+      xGap: theme.padding.md,
+      yGap: theme.padding.md,
+      columnHeights: new Array(theme.gridColumn[mediaSize]).fill(0),
+      containerWidth: width,
+      images: photosQuery.data?.photos || [],
+    });
+
+    return result;
+  }, [theme.padding.md, theme.gridColumn, mediaSize, width, photosQuery.data?.photos]);
+
   return (
-    <>
-      {photosQuery.data?.masonry ? (
+    <div ref={contaierRef}>
+      {photosQuery.data?.photos ? (
         <Masonry
-          containerWidth={width}
           margin={visibilityMargin}
-          masonry={photosQuery.data.masonry}
+          masonry={masonry}
           onBottomVisible={() => !photosQuery.isFetching && photosQuery.fetchNextPage()}
         />
       ) : null}
@@ -71,6 +70,6 @@ export const Gallery: FC<GalleryProps> = ({ width, columns, visibilityMargin }) 
         </LoaderWrapper>
       ) : null}
       <Outlet />
-    </>
+    </div>
   );
 };

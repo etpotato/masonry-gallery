@@ -6,9 +6,15 @@ import GlobalStyle from './theme/global-style';
 import { Layout } from './components/templates/Layout';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Gallery } from './components/organisms/Gallery';
-import { DetailedView } from './components/organisms/DetailedView';
+import { lazy } from 'react';
 
 const queryClient = new QueryClient();
+
+const DetailedViewLazy = lazy(() =>
+  import('./components/organisms/DetailedView').then((module) => ({
+    default: module.DetailedView,
+  })),
+);
 
 function App() {
   return (
@@ -19,11 +25,8 @@ function App() {
           <ThemeProvider theme={theme}>
             <Routes>
               <Route element={<Layout />}>
-                <Route
-                  path="/"
-                  element={<Gallery width={1200} columns={5} visibilityMargin={200} />}
-                >
-                  <Route path="/image/:id" element={<DetailedView />} />
+                <Route path="/" element={<Gallery visibilityMargin={300} />}>
+                  <Route path="/image/:id" element={<DetailedViewLazy />} />
                 </Route>
               </Route>
             </Routes>

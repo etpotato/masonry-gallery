@@ -6,7 +6,6 @@ import { Image } from '../../atoms/Image';
 import throttle from 'lodash.throttle';
 
 export type MasonryProps = {
-  containerWidth: number;
   margin: number;
   masonry: MasonryData<ImageData>;
   onBottomVisible: () => void;
@@ -30,7 +29,7 @@ function getVisibleItems(grid: MasonryItem<ImageData>[], margin: number) {
   );
 }
 
-export const Masonry: FC<MasonryProps> = ({ containerWidth, margin, masonry, onBottomVisible }) => {
+export const Masonry: FC<MasonryProps> = ({ margin, masonry, onBottomVisible }) => {
   const [visible, setVisible] = useState(new Set<string>());
 
   useEffect(() => {
@@ -59,7 +58,7 @@ export const Masonry: FC<MasonryProps> = ({ containerWidth, margin, masonry, onB
   }, [handleScroll]);
 
   return (
-    <Scrollable style={{ width: containerWidth, height: masonry.height }}>
+    <Scrollable style={{ height: masonry.height }}>
       {masonry.grid.map(({ image, x, y, width, height }) =>
         visible.has(getKey({ x, y })) ? (
           <Item

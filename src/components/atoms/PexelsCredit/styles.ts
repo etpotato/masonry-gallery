@@ -7,6 +7,7 @@ export const StyledLink = styled.a`
   padding: ${({ theme }) => theme.padding.sm}px ${({ theme }) => theme.padding.md}px;
   border: ${({ theme }) => theme.borderWidth.sm}px solid currentColor;
   color: currentColor;
+  background-color: ${({ theme }) => theme.colors.background};
   text-decoration: none;
   transform: translate(-98px, 92px) rotate(-90deg);
 `;
