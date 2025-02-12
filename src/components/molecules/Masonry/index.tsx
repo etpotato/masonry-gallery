@@ -1,105 +1,81 @@
-import { FCWithChildren } from '../../../types/react';
-import { StyledColumn, StyledGrid, StyledItem } from './styles';
-import { getMasonry } from '../../../utils/get-masonry';
-import { Image } from '../../atoms/Image';
-import useMatchMedia, { MediaSize } from '../../../hooks/useMatchMedia';
-import { useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
+import { MasonryData, MasonryItem } from '../../../utils/get-masonry';
+import { Item, Scrollable, StyledLink } from './styles';
 import { ImageData } from '../../../types/image';
-
-type ResponsiveSize = {
-  sm: number;
-  md: number;
-  lg: number;
-};
+import { Image } from '../../atoms/Image';
+import throttle from 'lodash.throttle';
 
 export type MasonryProps = {
-  photos: ImageData[];
-  gap: ResponsiveSize;
-  columns: ResponsiveSize;
-  style: Record<string, string>;
+  containerWidth: number;
+  margin: number;
+  masonry: MasonryData<ImageData>;
+  onBottomVisible: () => void;
 };
 
-const numberOfItems = 20;
+function getKey(item: Pick<MasonryItem<ImageData>, 'x' | 'y'>) {
+  return `${item.x}-${item.y}`;
+}
 
-export const Masonry: FCWithChildren<MasonryProps> = ({ photos, gap, columns, style }) => {
-  const containerRef = useRef<HTMLUListElement>(null);
-  const columnsRef = useRef<Array<HTMLSpanElement | null>>([]);
-  const [curColumns, setCurColumns] = useState(columns.sm);
-  const [curGap, setCurGap] = useState<number>(gap.sm);
-  const [columnWidth, setColumnWidth] = useState<number>(300);
+function getVisibleItems(grid: MasonryItem<ImageData>[], margin: number) {
+  const top = window.scrollY;
+  const bottom = top + window.innerHeight;
 
-  const [start, setStart] = useState(0);
-  const [end, setEnd] = useState(numberOfItems);
+  return new Set<string>(
+    grid
+      .filter((item) => {
+        const show = item.y + item.height > top - margin && item.y < bottom + margin;
+        return show;
+      })
+      .map((item) => getKey(item)),
+  );
+}
+
+export const Masonry: FC<MasonryProps> = ({ containerWidth, margin, masonry, onBottomVisible }) => {
+  const [visible, setVisible] = useState(new Set<string>());
 
   useEffect(() => {
-    console.log('start', start);
-    console.log('end', end);
-  }, [start, end]);
+    setVisible(getVisibleItems(masonry.grid, margin));
+  }, [margin, masonry.grid]);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        console.log('observer');
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setEnd((prev) => prev + 1);
-          } else {
-            setStart((prev) => Math.max(prev + 1, 0));
-          }
+  const handleScroll = useMemo(
+    () =>
+      throttle(() => {
+        const newVisible = getVisibleItems(masonry.grid, margin);
+        setVisible(newVisible);
+
+        if (newVisible.has(getKey(masonry.grid[masonry.grid.length - 1]))) {
+          onBottomVisible();
         }
-      },
-      {
-        rootMargin: '10%',
-      },
-    );
-    console.log('effect');
+      }, 50),
+    [masonry.grid, margin, onBottomVisible],
+  );
 
-    const images = containerRef.current?.querySelectorAll('img') || [];
-
-    for (const item of images) {
-      console.log('item', item);
-      if (item) {
-        observer.observe(item);
-      }
-    }
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
 
     return () => {
-      observer.disconnect();
-      columnsRef.current = [];
+      window.removeEventListener('scroll', handleScroll);
     };
-  }, [photos]);
-
-  useMatchMedia((size: MediaSize) => {
-    const containerWidth = containerRef.current?.getBoundingClientRect().width || 1200;
-    const newColumns = columns[size];
-    const newGap = gap[size];
-    const newColumnWidth = containerWidth - newGap * (newColumns - 1);
-
-    setColumnWidth(newColumnWidth);
-    setCurColumns(newColumns);
-    setCurGap(newGap);
-  });
-
-  const photosWithColumns = getMasonry({
-    images: photos.slice(start, end),
-    columnHeights: new Array(curColumns).fill(0),
-    columnWidth,
-    gap: curGap,
-  });
+  }, [handleScroll]);
 
   return (
-    <StyledGrid $columns={curColumns} $gap={curGap} style={style} ref={containerRef}>
-      {photosWithColumns.map((column, colIndex) => (
-        <StyledItem key={colIndex}>
-          <StyledColumn $gap={curGap}>
-            {column.map((photo) => (
-              <StyledItem key={photo.id}>
-                <Image image={photo} />
-              </StyledItem>
-            ))}
-          </StyledColumn>
-        </StyledItem>
-      ))}
-    </StyledGrid>
+    <Scrollable style={{ width: containerWidth, height: masonry.height }}>
+      {masonry.grid.map(({ image, x, y, width, height }) =>
+        visible.has(getKey({ x, y })) ? (
+          <Item
+            key={getKey({ x, y })}
+            style={{
+              transform: `translate(${x}px, ${y}px)`,
+              width: `${width}px`,
+              height: `${height}px`,
+            }}
+          >
+            <StyledLink to={``}>
+              <Image image={image} />
+            </StyledLink>
+          </Item>
+        ) : null,
+      )}
+    </Scrollable>
   );
 };

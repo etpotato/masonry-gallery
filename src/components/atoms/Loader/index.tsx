@@ -1,7 +1,6 @@
 import { StyledSvg } from './styles';
 
 export const Loader = () => {
-  console.log('Loader');
   return (
     <StyledSvg viewBox="0 0 200 200">
       <path stroke="currentColor" strokeWidth="13" d="M25 85h30v30H25z">

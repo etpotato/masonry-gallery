@@ -1,28 +1,19 @@
 import styled from 'styled-components';
+import { Link as RouterLink } from 'react-router';
 
-export type StyledGridProps = {
-  $columns: number;
-  $gap: number;
-};
-
-export const StyledGrid = styled.ul<StyledGridProps>`
-  display: grid;
-  grid-template-columns: repeat(${(props) => props.$columns}, 1fr);
-  gap: ${(props) => props.$gap}px;
-  align-items: start;
-  margin: 0;
+export const Scrollable = styled.ul`
+  position: relative;
+  margin: 0 auto;
   padding: 0;
   list-style: none;
 `;
 
-export const StyledColumn = styled.ul<Pick<StyledGridProps, '$gap'>>`
-  display: grid;
-  gap: ${(props) => props.$gap}px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
+export const Item = styled.li`
+  position: absolute;
+  top: 0;
+  left: 0;
 `;
 
-export const StyledItem = styled.li`
-  display: block;
+export const StyledLink = styled(RouterLink)`
+  display: contents;
 `;

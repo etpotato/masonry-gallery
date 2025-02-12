@@ -1,19 +1,39 @@
-import { fetchPhotos } from '../../../queries/photos/pexels';
-import { Masonry } from '../../molecules/Masonry';
 import { useTheme } from 'styled-components';
+import { fetchPhotos } from '../../../queries/photos/pexels';
 import { useInfiniteQuery } from '@tanstack/react-query';
+import { FC, useRef } from 'react';
+import { PhotoQueryKey } from '../../../queries/photos';
+import { getMasonry } from '../../../utils/get-masonry';
 import { Loader } from '../../atoms/Loader';
-import { LoaderWrapper, ScrollContent, ScrollWrap } from './styles';
-import { removeImageDuplicates } from '../../../utils/remove-image-duplicates';
-import { useState } from 'react';
+import { Masonry } from '../../molecules/Masonry';
+import { LoaderWrapper } from './styles';
 
-export const Gallery = () => {
+export type GalleryProps = {
+  width: number;
+  columns: number;
+};
+
+export const Gallery: FC<GalleryProps> = ({ width, columns }) => {
   const theme = useTheme();
-  const [translateY, setTranslateY] = useState(0);
+  const columnHeights = useRef(new Array(columns).fill(0));
 
   const photosQuery = useInfiniteQuery({
-    queryKey: ['photos'],
-    queryFn: ({ pageParam }) => fetchPhotos({ page: pageParam, per_page: 80 }),
+    queryKey: PhotoQueryKey.all,
+    queryFn: async ({ pageParam }) => {
+      const data = await fetchPhotos({ page: pageParam, per_page: 25 });
+
+      const masonry = getMasonry({
+        xGap: theme.padding.md,
+        yGap: theme.padding.md,
+        columnHeights: columnHeights.current,
+        containerWidth: width,
+        images: data.photos || [],
+      });
+
+      columnHeights.current = masonry.columnHeights;
+
+      return { ...data, masonry };
+    },
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
       if (!lastPage.photos.length) {
@@ -21,33 +41,33 @@ export const Gallery = () => {
       }
       return lastPage.page + 1;
     },
-    select: (data) => ({
-      ...data,
-      photos: removeImageDuplicates(data.pages.flatMap((page) => page.photos)),
-    }),
+    select: (data) => {
+      const masonry = {
+        ...data.pages[data.pages.length - 1].masonry,
+        grid: data.pages.flatMap((page) => page.masonry.grid),
+      };
+      return {
+        ...data,
+        masonry,
+      };
+    },
   });
 
-  const isLoading = photosQuery.isLoading || photosQuery.isFetchingNextPage;
-
-  const handleScroll = (e: any) => {
-    setTranslateY(-1 * e.target.scrollTop);
-  };
-
   return (
-    <ScrollWrap onScroll={handleScroll}>
-      <ScrollContent>
+    <>
+      {photosQuery.data?.masonry ? (
         <Masonry
-          style={{ transform: `translateY(${translateY}px)` }}
-          photos={photosQuery.data?.photos || []}
-          columns={theme.gridColumn}
-          gap={{ sm: theme.padding.sm, md: theme.padding.md, lg: theme.padding.md }}
+          containerWidth={width}
+          margin={300}
+          masonry={photosQuery.data.masonry}
+          onBottomVisible={() => !photosQuery.isFetching && photosQuery.fetchNextPage()}
         />
-        {isLoading ? (
-          <LoaderWrapper>
-            <Loader />
-          </LoaderWrapper>
-        ) : null}
-      </ScrollContent>
-    </ScrollWrap>
+      ) : null}
+      {photosQuery.isFetching ? (
+        <LoaderWrapper>
+          <Loader />
+        </LoaderWrapper>
+      ) : null}
+    </>
   );
 };

@@ -42,7 +42,6 @@ export function pexelsAdapdater(data: PexelsPhotos): Photos {
 
 const withCaches = await withCachesSafe<PexelsPhotos>('pexels-photos', fetchPexelsPhotos);
 export const fetchPhotos: QueryPhotos = async (input) => {
-  console.log('fetchPhotos', input);
   const result = await withCaches(getPexelsUrl(input));
   return pexelsAdapdater(result);
 };

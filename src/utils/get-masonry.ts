@@ -3,30 +3,49 @@ import { findIndexOfMin } from './find-index-of-min';
 
 export type GetMasonryInput<T> = {
   columnHeights: number[];
-  columnWidth: number;
+  containerWidth: number;
   images: T[];
-  gap: number;
+  xGap: number;
+  yGap: number;
+};
+
+export type MasonryItem<T extends ImageIntrinsicSize> = {
+  x: number;
+  y: number;
+  height: number;
+  width: number;
+  image: T;
+};
+
+export type MasonryData<T extends ImageIntrinsicSize> = {
+  grid: MasonryItem<T>[];
+  columnHeights: number[];
+  height: number;
 };
 
 export function getMasonry<T extends ImageIntrinsicSize>({
   columnHeights,
-  columnWidth,
+  containerWidth,
   images,
-  gap,
+  xGap,
+  yGap,
 }: GetMasonryInput<T>) {
-  if (!columnHeights.length) {
-    return [];
-  }
-
+  const columnWidth = (containerWidth - xGap * (columnHeights.length - 1)) / columnHeights.length;
   const heights = columnHeights.slice();
-  const columns: T[][] = columnHeights.map(() => []);
 
-  for (const image of images) {
-    const realHeight = (image.height / image.width) * columnWidth + gap;
+  const grid: MasonryItem<T>[] = images.map((image) => {
+    const realImageHeight = (image.height / image.width) * columnWidth;
     const shortestColumnIndex = findIndexOfMin(heights);
-    columns[shortestColumnIndex].push(image);
-    heights[shortestColumnIndex] += realHeight;
-  }
+    heights[shortestColumnIndex] += realImageHeight + yGap;
 
-  return columns;
+    return {
+      image,
+      x: shortestColumnIndex * columnWidth + shortestColumnIndex * xGap,
+      y: heights[shortestColumnIndex] - realImageHeight,
+      height: realImageHeight,
+      width: columnWidth,
+    };
+  });
+
+  return { grid, columnHeights: heights, height: Math.max(...heights) };
 }
