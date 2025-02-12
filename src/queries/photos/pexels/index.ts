@@ -25,7 +25,7 @@ function mapPexelsPhoto(photo: PexelsPhoto): ImageData {
     id: String(photo.id),
     src: {
       original: photo.src.original,
-      md: photo.src.large,
+      md: photo.src.medium,
       lg: photo.src.large2x,
     },
     title: photo.alt || '',
