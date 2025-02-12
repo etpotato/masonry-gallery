@@ -1,10 +1,13 @@
 import { Outlet } from 'react-router';
 import { PexelsCredit } from '../../atoms/PexelsCredit';
+import { Container } from '../../atoms/Container';
 
 export const Layout = () => {
   return (
     <main>
-      <Outlet />
+      <Container>
+        <Outlet />
+      </Container>
       <PexelsCredit />
     </main>
   );
