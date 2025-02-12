@@ -6,7 +6,6 @@ import { PhotoQueryKey } from '../../../queries/photos';
 import { getMasonry } from '../../../utils/get-masonry';
 import { Loader } from '../../atoms/Loader';
 import { Masonry } from '../../molecules/Masonry';
-import { LoaderWrapper } from './styles';
 import { Outlet } from 'react-router';
 import useMatchMedia from '../../../hooks/use-match-media';
 import { useResizeObserver } from '../../../hooks/use-resize-observer';
@@ -64,11 +63,7 @@ export const Gallery: FC<GalleryProps> = ({ visibilityMargin }) => {
           onBottomVisible={() => !photosQuery.isFetching && photosQuery.fetchNextPage()}
         />
       ) : null}
-      {photosQuery.isFetching ? (
-        <LoaderWrapper>
-          <Loader />
-        </LoaderWrapper>
-      ) : null}
+      {photosQuery.isFetching ? <Loader /> : null}
       <Outlet />
     </div>
   );
