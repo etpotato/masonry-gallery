@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useState } from 'react';
+import { FC, memo, useEffect, useMemo, useState } from 'react';
 import { MasonryData, MasonryItem } from '../../../utils/get-masonry';
 import { Item, Scrollable, StyledLink } from './styles';
 import { ImageData } from '../../../types/image';
@@ -28,6 +28,8 @@ function getVisibleItems(grid: MasonryItem<ImageData>[], margin: number) {
       .map((item) => getKey(item)),
   );
 }
+
+const MemoImage = memo(Image);
 
 export const Masonry: FC<MasonryProps> = ({ margin, masonry, onBottomVisible }) => {
   const [visible, setVisible] = useState(new Set<string>());
@@ -70,7 +72,7 @@ export const Masonry: FC<MasonryProps> = ({ margin, masonry, onBottomVisible }) 
             }}
           >
             <StyledLink to={`/image/${image.id}`}>
-              <Image image={image} />
+              <MemoImage image={image} />
             </StyledLink>
           </Item>
         ) : null,
