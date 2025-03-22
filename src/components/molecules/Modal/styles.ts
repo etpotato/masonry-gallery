@@ -8,6 +8,7 @@ export const ModalWrapper = styled.div`
   width: 100%;
   height: 100%;
   overflow-y: hidden;
+  z-index: 1;
 `;
 
 export const ModalScroll = styled.div`
@@ -23,7 +24,7 @@ export const ModalOverlay = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: ${({ theme }) => theme.colors.shadow};
+  background-color: ${({ theme }) => theme.colors.overlay};
 `;
 
 export const ModalContent = styled.div`

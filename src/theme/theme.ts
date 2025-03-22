@@ -2,7 +2,8 @@ export const theme = {
   colors: {
     background: '#fff',
     neutral: '#f0f0f0',
-    shadow: 'rgba(0, 0, 0, 0.5)',
+    overlay: 'rgba(0, 0, 0, 0.5)',
+    shadow: 'rgba(0, 0, 0, 0.2)',
   },
   padding: {
     xs: 4,

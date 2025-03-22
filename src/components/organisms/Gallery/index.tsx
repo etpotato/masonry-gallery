@@ -6,7 +6,7 @@ import { PhotoQueryKey } from '../../../queries/photos';
 import { getMasonry } from '../../../utils/get-masonry';
 import { Loader } from '../../atoms/Loader';
 import { Masonry } from '../../molecules/Masonry';
-import { Outlet } from 'react-router';
+import { Outlet, useSearchParams } from 'react-router';
 import useMatchMedia from '../../../hooks/use-match-media';
 import { useResizeObserver } from '../../../hooks/use-resize-observer';
 
@@ -19,11 +19,14 @@ export const Gallery: FC<GalleryProps> = ({ visibilityMargin }) => {
   const mediaSize = useMatchMedia();
   const contaierRef = useRef<HTMLDivElement>(null);
   const width = useResizeObserver(contaierRef);
+  const [searchParams] = useSearchParams();
 
   const photosQuery = useInfiniteQuery({
-    queryKey: PhotoQueryKey.all,
-    queryFn: async ({ pageParam }) => {
-      const data = await fetchPhotos({ page: pageParam, per_page: 20 });
+    queryKey: PhotoQueryKey.search({
+      query: searchParams.get('query') || '',
+    }),
+    queryFn: async ({ pageParam, queryKey }) => {
+      const data = await fetchPhotos({ page: pageParam, per_page: 20, query: queryKey[1].query });
 
       return { ...data };
     },
@@ -32,6 +35,7 @@ export const Gallery: FC<GalleryProps> = ({ visibilityMargin }) => {
       if (!lastPage.photos.length) {
         return undefined;
       }
+
       return lastPage.page + 1;
     },
     select: (data) => {

@@ -4,6 +4,7 @@ import { Item, Scrollable, StyledLink } from './styles';
 import { ImageData } from '../../../types/image';
 import { Image } from '../../atoms/Image';
 import throttle from 'lodash.throttle';
+import { useSearchParams } from 'react-router';
 
 export type MasonryProps = {
   margin: number;
@@ -33,6 +34,7 @@ const MemoImage = memo(Image);
 
 export const Masonry: FC<MasonryProps> = ({ margin, masonry, onBottomVisible }) => {
   const [visible, setVisible] = useState(new Set<string>());
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     setVisible(getVisibleItems(masonry.grid, margin));
@@ -71,7 +73,7 @@ export const Masonry: FC<MasonryProps> = ({ margin, masonry, onBottomVisible }) 
               height: `${height}px`,
             }}
           >
-            <StyledLink to={`/image/${image.id}`}>
+            <StyledLink to={{ pathname: `/images/${image.id}`, search: searchParams.toString() }}>
               <MemoImage image={image} />
             </StyledLink>
           </Item>

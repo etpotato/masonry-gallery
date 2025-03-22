@@ -1,14 +1,15 @@
 import { useQuery } from '@tanstack/react-query';
-import { useNavigate, useParams } from 'react-router';
+import { useParams } from 'react-router';
 import { PhotoQueryFn, PhotoQueryKey } from '../../../queries/photos';
 import { Modal } from '../../molecules/Modal';
 import { Loader } from '../../atoms/Loader';
 import { StyledItem, StyledList } from './styles';
 import { Image } from '../../atoms/Image';
+import { useNavigateWithSearchParams } from '../../../hooks/use-navigate-with-search-params';
 
 export const DetailedView = () => {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
+  const navigate = useNavigateWithSearchParams();
 
   const photoQuery = useQuery({
     queryKey: PhotoQueryKey.detailed({ id: id || '' }),

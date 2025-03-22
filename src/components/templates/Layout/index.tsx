@@ -1,14 +1,19 @@
 import { Outlet } from 'react-router';
 import { PexelsCredit } from '../../atoms/PexelsCredit';
 import { Container } from '../../atoms/Container';
+import { Header } from '../../organisms/Header';
+import { StyledMain } from './styles';
 
 export const Layout = () => {
   return (
-    <main>
-      <Container>
-        <Outlet />
-      </Container>
-      <PexelsCredit />
-    </main>
+    <>
+      <Header />
+      <StyledMain>
+        <Container>
+          <Outlet />
+        </Container>
+        <PexelsCredit />
+      </StyledMain>
+    </>
   );
 };

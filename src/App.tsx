@@ -26,7 +26,7 @@ function App() {
             <Routes>
               <Route element={<Layout />}>
                 <Route path="/" element={<Gallery visibilityMargin={300} />}>
-                  <Route path="/image/:id" element={<DetailedViewLazy />} />
+                  <Route path="/images/:id" element={<DetailedViewLazy />} />
                 </Route>
               </Route>
             </Routes>
