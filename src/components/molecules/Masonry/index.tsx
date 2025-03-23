@@ -5,6 +5,7 @@ import { ImageData } from '../../../types/image';
 import { Image } from '../../atoms/Image';
 import throttle from 'lodash.throttle';
 import { useSearchParams } from 'react-router';
+import { preloadImage } from '../../../utils/preload-image';
 
 export type MasonryProps = {
   margin: number;
@@ -61,6 +62,12 @@ export const Masonry: FC<MasonryProps> = ({ margin, masonry, onBottomVisible }) 
     };
   }, [handleScroll]);
 
+  function getLinkClickHandler(url: string) {
+    return function handleLinkClick() {
+      preloadImage(url);
+    };
+  }
+
   return (
     <Scrollable style={{ height: masonry.height }}>
       {masonry.grid.map(({ image, x, y, width, height }) =>
@@ -73,7 +80,10 @@ export const Masonry: FC<MasonryProps> = ({ margin, masonry, onBottomVisible }) 
               height: `${height}px`,
             }}
           >
-            <StyledLink to={{ pathname: `/images/${image.id}`, search: searchParams.toString() }}>
+            <StyledLink
+              to={{ pathname: `/images/${image.id}`, search: searchParams.toString() }}
+              onClick={getLinkClickHandler(image.src.original)}
+            >
               <MemoImage image={image} />
             </StyledLink>
           </Item>
