@@ -1,15 +1,20 @@
 import styled from 'styled-components';
 
-export const StyledList = styled.ul`
-  margin: 0;
-  margin-bottom: ${({ theme }) => theme.padding.lg}px;
-  padding: 0;
-  list-style: none;
+export const LoaderWrap = styled.div`
+  height: 100%;
+  display: grid;
+  place-content: center;
 `;
 
-export const StyledItem = styled.li`
+export const TextWrap = styled.div`
+  padding: ${({ theme }) => theme.padding.lg}px;
+`;
+
+export const StyledParagraph = styled.p`
+  margin: 0;
   margin-bottom: ${({ theme }) => theme.padding.md}px;
-  font-size: 1.2em;
+  list-style: none;
+  font-size: 0.8em;
 
   &:last-child {
     margin-bottom: 0;

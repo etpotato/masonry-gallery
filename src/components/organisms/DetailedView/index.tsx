@@ -3,7 +3,7 @@ import { useParams } from 'react-router';
 import { PhotoQueryFn, PhotoQueryKey } from '../../../queries/photos';
 import { Modal } from '../../molecules/Modal';
 import { Loader } from '../../atoms/Loader';
-import { StyledItem, StyledList } from './styles';
+import { LoaderWrap, StyledParagraph, TextWrap } from './styles';
 import { Image } from '../../atoms/Image';
 import { useNavigateWithSearchParams } from '../../../hooks/use-navigate-with-search-params';
 
@@ -18,27 +18,29 @@ export const DetailedView = () => {
 
   return (
     <Modal onClose={() => navigate('/')}>
-      {photoQuery.isLoading ? <Loader /> : null}
+      {photoQuery.isLoading ? (
+        <LoaderWrap>
+          <Loader />
+        </LoaderWrap>
+      ) : null}
       {photoQuery.isError && 'Error loading photo'}
       {photoQuery.isSuccess ? (
         <>
-          <StyledList>
-            <StyledItem>
-              <i>{photoQuery.data.title ? `"${photoQuery.data.title}"` : 'Untitled'}</i>
-            </StyledItem>
-            <StyledItem>
-              Photographer:{' '}
+          <Image image={photoQuery.data} size="original" />
+          <TextWrap>
+            <StyledParagraph>
+              <i>{photoQuery.data.title ? `"${photoQuery.data.title}"` : 'Untitled'}</i> by&nbsp;
               <a href={photoQuery.data.authorUrl} target="_blank" rel="noopener noreferrer">
                 {photoQuery.data.author}
               </a>
-            </StyledItem>
-            <StyledItem>
+            </StyledParagraph>
+            <StyledParagraph>
+              Original post&nbsp;
               <a href={photoQuery.data.url} target="_blank" rel="noopener noreferrer">
-                Original post on Pexels
+                on Pexels
               </a>
-            </StyledItem>
-          </StyledList>
-          <Image image={photoQuery.data} />
+            </StyledParagraph>
+          </TextWrap>
         </>
       ) : null}
     </Modal>

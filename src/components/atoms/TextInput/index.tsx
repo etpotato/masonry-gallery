@@ -6,7 +6,7 @@ export const TextInput = styled.input`
   border: ${(props) => props.theme.borderWidth.sm}px solid currentColor;
   background-color: ${(props) => props.theme.colors.background};
 
-  &:focus {
+  &:not(:focus-visible) {
     outline: none;
   }
 `;

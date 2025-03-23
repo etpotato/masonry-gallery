@@ -11,13 +11,6 @@ export const ModalWrapper = styled.div`
   z-index: 1;
 `;
 
-export const ModalScroll = styled.div`
-  width: 100%;
-  height: 100%;
-  padding: ${({ theme }) => theme.padding.xl}px;
-  overflow-y: scroll;
-`;
-
 export const ModalOverlay = styled.div`
   position: absolute;
   top: 0;
@@ -28,19 +21,18 @@ export const ModalOverlay = styled.div`
 `;
 
 export const ModalContent = styled.div`
-  position: relative;
-  min-width: 80vw;
-  min-height: 80vh;
-  max-width: ${({ theme }) => theme.contanierWidth + theme.padding.xl * 2}px;
-  margin: 0 auto;
+  position: absolute;
+  top: ${({ theme }) => theme.padding.lg}px;
+  right: ${({ theme }) => theme.padding.lg}px;
+  bottom: ${({ theme }) => theme.padding.lg}px;
+  left: ${({ theme }) => theme.padding.lg}px;
   display: grid;
-  align-items: center;
-  padding: ${({ theme }) => theme.padding.xl}px;
   background-color: ${({ theme }) => theme.colors.background};
+  overflow-y: scroll;
 `;
 
 export const CloseButton = styled(Button)`
   position: absolute;
-  top: ${({ theme }) => theme.padding.sm}px;
-  right: ${({ theme }) => theme.padding.sm}px;
+  top: ${({ theme }) => theme.padding.md}px;
+  right: ${({ theme }) => theme.padding.md}px;
 `;

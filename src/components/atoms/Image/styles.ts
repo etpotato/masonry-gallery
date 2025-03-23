@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 export const StyledWrapper = styled.div`
   display: grid;
+  user-select: none;
 `;
 
 export const StyledImage = styled.img`
