@@ -12,7 +12,9 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
     padding: 0;
     background: ${theme.colors.background};
+    color: ${theme.colors.text};
     font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
+    font-weight: 400;
   }
 `;
 
