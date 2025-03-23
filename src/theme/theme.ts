@@ -28,6 +28,7 @@ export const theme = {
     lg: 4,
     xl: 5,
   },
+  opacity: 0.95,
 } as const;
 
 export type Theme = typeof theme;
