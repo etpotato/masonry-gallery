@@ -3,7 +3,7 @@ import { useParams } from 'react-router';
 import { PhotoQueryFn, PhotoQueryKey } from '../../../queries/photos';
 import { Modal } from '../../molecules/Modal';
 import { Loader } from '../../atoms/Loader';
-import { LoaderWrap, StyledParagraph, TextWrap } from './styles';
+import { LoaderWrap, StyledParagraph, TextWrap, Wrap } from './styles';
 import { Image } from '../../atoms/Image';
 import { useNavigateWithSearchParams } from '../../../hooks/use-navigate-with-search-params';
 
@@ -25,7 +25,7 @@ export const DetailedView = () => {
       ) : null}
       {photoQuery.isError && 'Error loading photo'}
       {photoQuery.isSuccess ? (
-        <>
+        <Wrap>
           <Image image={photoQuery.data} size="original" />
           <TextWrap>
             <StyledParagraph>
@@ -41,7 +41,7 @@ export const DetailedView = () => {
               </a>
             </StyledParagraph>
           </TextWrap>
-        </>
+        </Wrap>
       ) : null}
     </Modal>
   );

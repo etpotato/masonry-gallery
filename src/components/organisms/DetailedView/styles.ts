@@ -1,9 +1,16 @@
 import styled from 'styled-components';
 
 export const LoaderWrap = styled.div`
-  height: 100%;
   display: grid;
   place-content: center;
+  height: 100%;
+`;
+
+export const Wrap = styled.div`
+  display: grid;
+  grid-template-rows: auto 1fr;
+  align-items: center;
+  height: 100%;
 `;
 
 export const TextWrap = styled.div`

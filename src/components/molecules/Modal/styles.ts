@@ -26,7 +26,6 @@ export const ModalContent = styled.div`
   right: ${({ theme }) => theme.padding.lg}px;
   bottom: ${({ theme }) => theme.padding.lg}px;
   left: ${({ theme }) => theme.padding.lg}px;
-  display: grid;
   background-color: ${({ theme }) => theme.colors.background};
   overflow-y: scroll;
 `;
